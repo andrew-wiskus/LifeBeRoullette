@@ -1,8 +1,7 @@
 import { observer, Provider } from 'mobx-react';
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { NMZ_Page } from './pages/HomePage';
-import { MouseTesting } from './pages/MouseTesting';
+import { HomePage } from './pages/HomePage';
 import { ApplicationStore } from './stores/ApplicationStore';
 
 const applicationStore = new ApplicationStore();
@@ -14,7 +13,7 @@ export default class App extends React.Component {
       <Provider applicationStore={applicationStore}>
         <Router>
           <Switch>
-            <Route path="/" component={MouseTesting} />
+            <Route path="/" component={HomePage} />
           </Switch>
         </Router>
       </Provider>

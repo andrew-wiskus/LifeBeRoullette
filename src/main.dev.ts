@@ -69,12 +69,14 @@ const createWindow = async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1024,
-    height: 728,
+    width: 1476,
+    height: 1405,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       nodeIntegration: true,
     },
+    x: 1970,
+    y: 0,
   });
 
   mainWindow.loadURL(`file://${__dirname}/index.html`);
