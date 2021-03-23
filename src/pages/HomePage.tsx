@@ -5,9 +5,10 @@ const getColor = (i) => {
 };
 
 const tileHeight = 100;
-const tileWidth = 70;
+const tileWidth = 99;
 const boardHeight = tileHeight * 3;
 const boardWidth = tileWidth * 12;
+const BOTTOM_ROW_HEIGHT = 70;
 
 interface BetRegion {
   id: string;
@@ -42,15 +43,14 @@ export class HomePage extends React.Component<{}, { region: BetRegion | undefine
 }
 
           <NumberButtons onClickRegion={this.onClickRegion} />
-          <LeftRightButtons onClickRegion={this.onClickRegion}/>
-          <TopBottomButtons onClickRegion={this.onClickRegion}/>
-          <SelectFourButtons onClickRegion={this.onClickRegion}/>
+          <LeftRightButtons onClickRegion={this.onClickRegion} showButton={false}/>
+          <TopBottomButtons onClickRegion={this.onClickRegion} showButton={false}/>
+          <SelectFourButtons onClickRegion={this.onClickRegion} showButton={false}/>
           <ZeroButtonColumn onClickRegion={this.onClickRegion}/>
           <RowButtonColumn onClickRegion={this.onClickRegion}/>
           <ColumnButtonRow onClickRegion={this.onClickRegion}/>
           <TwelvesButtonRow onClickRegion={this.onClickRegion}/>
           <FiftyFiftyButtonRow onClickRegion={this.onClickRegion} />
-
 			</div>
 		);
 	}
@@ -80,7 +80,7 @@ export class NumberButtons extends React.Component<RegionProps> {
               }
 
               return (
-                <div onClick={() => this.props.onClickRegion(region)} style={{ pointerEvents: `auto`, cursor: 'pointer', position: 'absolute', zIndex: 5, left: tileWidth * leftIndex, top: topPos, height: tileHeight, width: tileWidth, backgroundColor: getColor(i),  display: `flex`, justifyContent: `center`, alignItems: `center` }}>
+                <div onClick={() => this.props.onClickRegion(region)} style={{ pointerEvents: `auto`, cursor: 'pointer', position: 'absolute', border: `1px solid black`, zIndex: 5, left: tileWidth * leftIndex, top: topPos, height: tileHeight, width: tileWidth, backgroundColor: getColor(i),  display: `flex`, justifyContent: `center`, alignItems: `center` }}>
                   <h1 style={{ fontSize: 36, color: `white`, fontFamily: `courier` }}>{i + 1}</h1>
                 </div>
               );
@@ -90,7 +90,7 @@ export class NumberButtons extends React.Component<RegionProps> {
   }
 }
 
-export class LeftRightButtons extends React.Component<RegionProps>{
+export class LeftRightButtons extends React.Component<RegionProps & { showButton: boolean }>{
   public render() {
     return (
 					<div style={styles.gameBoard}>
@@ -111,8 +111,10 @@ export class LeftRightButtons extends React.Component<RegionProps>{
                 returnMultiplier: 18,
               }
 
+              let opacity = this.props.showButton ? 0.5 : 0;
+              let style = { backgroundColor: `#FFFFFF88`, border: `4px solid white`, opacity: opacity }
 							return <>
-                <div onClick={() => this.props.onClickRegion(region)} style={{ pointerEvents: `auto`, cursor: 'pointer', position: `absolute`, top: topPos, left: tileWidth * leftIndex, transform: `translate(-50%, 0)`, height: tileHeight, width: 20, backgroundColor: `white`, border: `7px solid orange`, zIndex: 10 }} />
+                <div onClick={() => this.props.onClickRegion(region)} style={{ ...style, pointerEvents: `auto`, cursor: 'pointer', position: `absolute`, top: topPos, left: tileWidth * leftIndex, transform: `translate(-50%, 0)`, height: tileHeight, width: 20, zIndex: 10 }} />
               </>						
             })}
 					</div>
@@ -121,7 +123,7 @@ export class LeftRightButtons extends React.Component<RegionProps>{
 }
 
 
-export class SelectFourButtons extends React.Component <RegionProps> {
+export class SelectFourButtons extends React.Component <RegionProps & { showButton: boolean }> {
   public render() {
     return (
 					<div style={styles.gameBoard}>
@@ -147,20 +149,23 @@ export class SelectFourButtons extends React.Component <RegionProps> {
                 returnMultiplier: 9,
               }
 
+              let opacity = this.props.showButton ? 0.5 : 0;
+              let style = { backgroundColor: `#FFFFFF88`, border: `4px solid white`, opacity: opacity  }
+
+              let baseStyle = { ...style, cursor: 'pointer', pointerEvents: 'auto', position: `absolute`, transform: `translate(-50%, -50%)`, height: 20, width: 20, zIndex: 30, left: tileWidth * (i + 1) } as CSSProperties
 
 							return <>
-                <div onClick={() => this.props.onClickRegion(topRowRegion)} style={{ pointerEvents: 'auto', position: `absolute`, top: tileHeight, left: tileWidth * (i + 1), transform: `translate(-50%, -50%)`, height: 20, width: 20, backgroundColor: `white`, border: `7px solid blue`, zIndex: 30 }} />
-                <div onClick={() => this.props.onClickRegion(botRowRegion)} style={{ pointerEvents: 'auto', position: `absolute`, top: tileHeight * 2, left: tileWidth * (i + 1), transform: `translate(-50%, -50%)`, height: 20, width: 20, backgroundColor: `white`, border: `7px solid blue`, zIndex: 30 }} />
+                <div onClick={() => this.props.onClickRegion(topRowRegion)} style={{ ...baseStyle, top: tileHeight }} />
+                <div onClick={() => this.props.onClickRegion(botRowRegion)} style={{ ...baseStyle, top: tileHeight * 2 }} />
               </>						
             })}
 					</div>
-
     ) 
   }
 }
 
 
-export class TopBottomButtons extends React.Component<RegionProps> {
+export class TopBottomButtons extends React.Component<RegionProps & { showButton: boolean }> {
   public render() {
     	return (
         <div style={styles.gameBoard}>
@@ -178,10 +183,14 @@ export class TopBottomButtons extends React.Component<RegionProps> {
               label: `${i + 1}&${i + 2}`,
               valuesEffected: [i + 1, i + 2],
               returnMultiplier: 18,
-            }
+            } 
+
+            let opacity = this.props.showButton ? 0.5 : 0;
+
+            let style = { backgroundColor: `#FFFFFF88`, border: `4px solid white`, opacity: opacity, transition: '1s all'  }
 
             return <>
-              <div onClick={() => this.props.onClickRegion(region)} style={{ pointerEvents: 'auto', cursor: 'pointer', position: `absolute`, top: topPos, left: tileWidth * leftIndex, transform: `translate(0, -50%)`, height: 20, width: tileWidth, backgroundColor: `white`, border: `7px solid green`, zIndex: 10 }} />
+              <div onClick={() => this.props.onClickRegion(region)} style={{ ...style, pointerEvents: 'auto', cursor: 'pointer', position: `absolute`, top: topPos, left: tileWidth * leftIndex, transform: `translate(0, -50%)`, height: 20, width: tileWidth, zIndex: 10 }} />
             </>
           })}
         </div>
@@ -206,13 +215,15 @@ export class ZeroButtonColumn extends React.Component<RegionProps> {
       returnMultiplier: 50,
     }
 
-
+    let style = {  backgroundColor: `red`, border: `1px solid black` }
+    let baseStyle = { ...style, pointerEvents: 'auto', cursor: 'pointer', position: `absolute`, left: -tileWidth, height: boardHeight  / 2, width: tileWidth, justifyContent: 'center', alignItems: 'center', display: 'flex' } as CSSProperties
+    
     return (
 					<div style={styles.gameBoard}>
-              <div onClick={() => this.props.onClickRegion(singleZeroRegion)}style={{pointerEvents: 'auto', cursor: 'pointer', position: `absolute`, top: 0, left: -tileWidth, height: boardHeight  / 2, width: tileWidth, backgroundColor: `salmon`, border: `7px solid aqua`, justifyContent: 'center', alignItems: 'center', display: 'flex'}}>
+              <div onClick={() => this.props.onClickRegion(singleZeroRegion)}style={{...baseStyle, top: 0 }}>
                   <h1 style={{ fontSize: 36, color: `white`, fontFamily: `courier` }}>{`0`}</h1>
               </div>
-              <div onClick={() => this.props.onClickRegion(doubleZeroRegion)}style={{pointerEvents: 'auto', cursor: 'pointer', position: `absolute`, top: boardHeight / 2, left: -tileWidth, height: boardHeight  / 2, width: tileWidth, backgroundColor: `salmon`, border: `7px solid aqua`, justifyContent: 'center', alignItems: 'center', display: 'flex'}}>
+              <div onClick={() => this.props.onClickRegion(doubleZeroRegion)}style={{...baseStyle, top: boardHeight / 2 }}>
                   <h1 style={{ fontSize: 36, color: `white`, fontFamily: `courier` }}>{`00`}</h1>
               </div>
           </div>
@@ -245,11 +256,20 @@ export class RowButtonColumn extends React.Component <RegionProps> {
       returnMultiplier: 3,
     }
 
+    let style = { backgroundColor: `red`, border: `1px solid black` }
+    let baseStyle = { ...style, cursor: 'pointer', pointerEvents: 'auto', position: `absolute`, right: -tileWidth, height: tileHeight, width: tileWidth, display: 'flex', justifyContent: 'center', alignItems: 'center' } as CSSProperties
+
     return (
 					<div style={styles.gameBoard}>
-              <div onClick={() => this.props.onClickRegion(topRow)} style={{ cursor: 'pointer', pointerEvents: 'auto', position: `absolute`, top: tileHeight * 0, right: -tileWidth / 2, height: tileHeight, width: tileWidth / 2, backgroundColor: `purple`, border: `7px solid aqua`}} />
-              <div onClick={() => this.props.onClickRegion(midRow)} style={{ cursor: 'pointer', pointerEvents: 'auto', position: `absolute`, top: tileHeight * 1, right: -tileWidth / 2, height: tileHeight, width: tileWidth / 2, backgroundColor: `purple`, border: `7px solid aqua`}} />
-              <div onClick={() => this.props.onClickRegion(botRow)} style={{ cursor: 'pointer', pointerEvents: 'auto', position: `absolute`, top: tileHeight * 2, right: -tileWidth / 2, height: tileHeight, width: tileWidth / 2, backgroundColor: `purple`, border: `7px solid aqua`}} />
+              <div onClick={() => this.props.onClickRegion(topRow)} style={{ ...baseStyle, top: tileHeight * 0 }}>
+                <h1 style={{color: 'white', fontFamily: 'courier', marginLeft: 3, marginTop: 3}}>{`<-- ROW`}</h1>
+              </div>
+              <div onClick={() => this.props.onClickRegion(midRow)} style={{ ...baseStyle, top: tileHeight * 1 }}>
+                <h1 style={{color: 'white', fontFamily: 'courier', marginLeft: 3, marginTop: 3}}>{`<-- ROW`}</h1>
+              </div>
+              <div onClick={() => this.props.onClickRegion(botRow)} style={{ ...baseStyle, top: tileHeight * 2 }}>
+                <h1 style={{color: 'white', fontFamily: 'courier', marginLeft: 3, marginTop: 3}}>{`<-- ROW`}</h1>
+              </div>
           </div>
     ) 
   }
@@ -272,10 +292,17 @@ export class ColumnButtonRow extends React.Component<RegionProps>{
                 label: `Column`,
                 valuesEffected: [i + 1, i + 2, i + 3],
                 returnMultiplier: 12,
-              }
+              } 
 
-              return <>
-                <div onClick={() => this.props.onClickRegion(region)} style={{cursor: 'pointer', pointerEvents: 'auto', position: `absolute`, top: tileHeight * 3, left: tileWidth * leftIndex, height: tileWidth / 2, width: tileWidth, backgroundColor: `grey`, border: `7px solid aqua`, zIndex: 10 }} />
+              let style = { backgroundColor: `red`, border: `1px solid black` }
+              let baseStyle = { ...style, cursor: 'pointer', pointerEvents: 'auto', position: `absolute`, top: tileHeight * 3, left: tileWidth * leftIndex, height: BOTTOM_ROW_HEIGHT, width: tileWidth, zIndex: 10 } as CSSProperties
+
+              return <> 
+                <div onClick={() => this.props.onClickRegion(region)} style={baseStyle}>
+                  <h1 style={{color: 'white', fontFamily: 'courier', marginLeft: 3, marginTop: 3}}>{i + 1}</h1>
+                  <h1 style={{color: 'white', fontFamily: 'courier', marginLeft: 3, marginTop: 3}}>{i + 2}</h1>
+                  <h1 style={{color: 'white', fontFamily: 'courier', marginLeft: 3, marginTop: 3}}>{i + 3}</h1>
+                </div>
               </>
             })}
           </div>
@@ -307,11 +334,22 @@ export class TwelvesButtonRow extends React.Component<RegionProps>{
       returnMultiplier: 12,
     }
 
+    let style = { backgroundColor: `red`, border: `1px solid black`, }
+    let baseStyle = { ...style, cursor: 'pointer', pointerEvents: 'auto', position: `absolute`, top: tileHeight * 3 + BOTTOM_ROW_HEIGHT, height: BOTTOM_ROW_HEIGHT, width: tileWidth * 4, zIndex: 10, display: 'flex', justifyContent: 'center', alignItems: 'center'  } as CSSProperties
+
     return (
         <div style={styles.gameBoard}>
-            <div onClick={() => this.props.onClickRegion(firstRegion)} style={{cursor: 'pointer', pointerEvents: 'auto', position: `absolute`, top: tileHeight * 3 + tileWidth / 2, left: (tileWidth * 4) * 0, height: tileWidth / 2, width: tileWidth * 4, backgroundColor: `skyblue`, border: `7px solid purple`, zIndex: 10 }} />
-            <div onClick={() => this.props.onClickRegion(secondRegion)} style={{cursor: 'pointer', pointerEvents: 'auto', position: `absolute`, top: tileHeight * 3 + tileWidth / 2, left: (tileWidth * 4) * 1, height: tileWidth / 2, width: tileWidth * 4, backgroundColor: `skyblue`, border: `7px solid purple`, zIndex: 10 }} />
-            <div onClick={() => this.props.onClickRegion(thirdRegion)} style={{cursor: 'pointer', pointerEvents: 'auto', position: `absolute`, top: tileHeight * 3 + tileWidth / 2, left: (tileWidth * 4) * 2, height: tileWidth / 2, width: tileWidth * 4, backgroundColor: `skyblue`, border: `7px solid purple`, zIndex: 10 }} />
+            <div onClick={() => this.props.onClickRegion(firstRegion)} style={{...baseStyle, left: (tileWidth * 4) * 0 }} >
+              <h1 style={{ fontSize: 36, color: `white`, fontFamily: `courier` }}>{`1-12`}</h1>
+            </div>
+
+            <div onClick={() => this.props.onClickRegion(secondRegion)} style={{...baseStyle, left: (tileWidth * 4) * 1 }} >
+              <h1 style={{ fontSize: 36, color: `white`, fontFamily: `courier` }}>{`13-24`}</h1>
+            </div>
+
+            <div onClick={() => this.props.onClickRegion(thirdRegion)} style={{...baseStyle, left: (tileWidth * 4) * 2 }} >
+              <h1 style={{ fontSize: 36, color: `white`, fontFamily: `courier` }}>{`25-36`}</h1>
+            </div>
         </div>
     ) 
   }
@@ -362,35 +400,39 @@ export class FiftyFiftyButtonRow extends React.Component<RegionProps>{
       returnMultiplier: 2,
     } 
 
+    let style = { backgroundColor: `red`, border: `1px solid black` }
+
+    let baseStyle = { ...style, top: tileHeight * 3 + BOTTOM_ROW_HEIGHT * 2, cursor: 'pointer', pointerEvents: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center', position: `absolute`, height: BOTTOM_ROW_HEIGHT, width: tileWidth * 2, zIndex: 10 } as CSSProperties
+
     return (
         <div style={styles.gameBoard}>
 
-           <div onClick={() => this.props.onClickRegion(lowRegion)} style={{cursor: 'pointer', pointerEvents: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center', position: `absolute`, top: tileHeight * 3 + tileWidth, left: (tileWidth * 2) * 0, height: tileWidth, width: tileWidth * 2, backgroundColor: `orange`, border: `7px solid brown`, zIndex: 10 }} >
+           <div onClick={() => this.props.onClickRegion(lowRegion)} style={{...baseStyle, left: (tileWidth * 2) * 0 }} >
                   <h1 style={{ fontSize: 36, color: `white`, fontFamily: `courier` }}>{lowRegion.label}</h1>
           </div>
 
 
-           <div onClick={() => this.props.onClickRegion(evenRegion)} style={{cursor: 'pointer', pointerEvents: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center', position: `absolute`, top: tileHeight * 3 + tileWidth, left: (tileWidth * 2) * 1, height: tileWidth, width: tileWidth * 2, backgroundColor: `orange`, border: `7px solid brown`, zIndex: 10 }} >
+           <div onClick={() => this.props.onClickRegion(evenRegion)} style={{...baseStyle, left: (tileWidth * 2) * 1 }} >
                   <h1 style={{ fontSize: 36, color: `white`, fontFamily: `courier` }}>{evenRegion.label}</h1>
           </div>
 
 
-           <div onClick={() => this.props.onClickRegion(redRegion)} style={{cursor: 'pointer', pointerEvents: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center', position: `absolute`, top: tileHeight * 3 + tileWidth, left: (tileWidth * 2) * 2, height: tileWidth, width: tileWidth * 2, backgroundColor: `orange`, border: `7px solid brown`, zIndex: 10 }} >
+           <div onClick={() => this.props.onClickRegion(redRegion)} style={{...baseStyle, left: (tileWidth * 2) * 2 }} >
                   <h1 style={{ fontSize: 36, color: `white`, fontFamily: `courier` }}>{redRegion.label}</h1>
           </div>
 
 
-           <div onClick={() => this.props.onClickRegion(blackRegion)} style={{cursor: 'pointer', pointerEvents: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center', position: `absolute`, top: tileHeight * 3 + tileWidth, left: (tileWidth * 2) * 3, height: tileWidth, width: tileWidth * 2, backgroundColor: `orange`, border: `7px solid brown`, zIndex: 10 }} >
+           <div onClick={() => this.props.onClickRegion(blackRegion)} style={{...baseStyle, left: (tileWidth * 2) * 3 }} >
                   <h1 style={{ fontSize: 36, color: `white`, fontFamily: `courier` }}>{blackRegion.label}</h1>
           </div>
 
 
-           <div onClick={() => this.props.onClickRegion(oddRegion)} style={{cursor: 'pointer', pointerEvents: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center', position: `absolute`, top: tileHeight * 3 + tileWidth, left: (tileWidth * 2) * 4, height: tileWidth, width: tileWidth * 2, backgroundColor: `orange`, border: `7px solid brown`, zIndex: 10 }} >
+           <div onClick={() => this.props.onClickRegion(oddRegion)} style={{...baseStyle, left: (tileWidth * 2) * 4 }} >
                   <h1 style={{ fontSize: 36, color: `white`, fontFamily: `courier` }}>{oddRegion.label}</h1>
           </div>
 
 
-           <div onClick={() => this.props.onClickRegion(highRegion)} style={{cursor: 'pointer', pointerEvents: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center', position: `absolute`, top: tileHeight * 3 + tileWidth, left: (tileWidth * 2) * 5, height: tileWidth, width: tileWidth * 2, backgroundColor: `orange`, border: `7px solid brown`, zIndex: 10 }} >
+           <div onClick={() => this.props.onClickRegion(highRegion)} style={{...baseStyle, left: (tileWidth * 2) * 5 }} >
                   <h1 style={{ fontSize: 36, color: `white`, fontFamily: `courier` }}>{highRegion.label}</h1>
           </div>
 
@@ -403,12 +445,13 @@ let border = 20;
 const styles = {
 	container: {
 		border: `${border}px solid red`,
-		width: window.innerWidth - border * 2,
-		height: window.innerHeight - border * 2,
+		width: window.innerWidth,
+		height: window.innerHeight ,
     position: 'relative',
-    pointerEvents: `none`
+    pointerEvents: `none`,
+    backgroundColor: 'white',
 	} as CSSProperties,
   gameBoard: {
-    position: `absolute`,  width: boardWidth, height: boardHeight, bottom: tileWidth * 2 + 20, left: `calc(50% - ${boardWidth / 2}px)`, zIndex: 0, pointerEvents: `none`
+    position: `absolute`,  width: boardWidth, height: boardHeight, bottom: BOTTOM_ROW_HEIGHT * 3, left: `calc(50% - ${boardWidth / 2}px)`, zIndex: 0, pointerEvents: `none`
   } as CSSProperties
 };
