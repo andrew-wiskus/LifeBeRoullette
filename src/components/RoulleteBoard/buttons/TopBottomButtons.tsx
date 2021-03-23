@@ -13,7 +13,7 @@ interface Props extends RegionProps {
 export class TopBottomButtons extends React.Component<Props> {
   public render() {
 
-    let shouldShowButton = true;
+    let shouldShowButton = false;
 
     return (
       <div style={styles.gameBoard}>

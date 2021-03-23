@@ -1,6 +1,5 @@
 import React from 'react';
 import { ColumnButtonRow } from './buttons/ColumnButtonRow';
-import { FiftyFiftyButtonRow } from './buttons/FiftyFiftyButtonRow';
 import { LeftRightButtons } from './buttons/LeftRightButtons';
 import { NumberButtons } from './buttons/NumberButtons';
 import { RowButtonColumn } from './buttons/RowButtonColumn';
@@ -21,7 +20,6 @@ export class RoulleteBoard extends React.Component {
           <RowButtonColumn/>
           <ColumnButtonRow/>
           <TwelvesButtonRow/>
-          <FiftyFiftyButtonRow />
         </>
     }
 }
