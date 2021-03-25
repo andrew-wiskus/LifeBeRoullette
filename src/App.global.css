@@ -48,5 +48,25 @@ table {
 }
 
 * {
+	user-select: none;
 	box-sizing:  border-box;
+}
+
+.hover-action {
+	outline-style: solid;
+	outline-color: white;
+	outline-width: 0px;
+	transition: All cubic-bezier(0.55, 0.055, 0.675, 0.19)
+}
+
+.hover-action:hover {
+	outline-width: 4px;
+	z-index: 999;
+}
+
+.winner-square {
+	outline-width: 8px;
+	outline-color: gold;
+	outline-offset: -8px;
+	z-index: 99;
 }
