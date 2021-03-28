@@ -3,7 +3,7 @@ import React, { CSSProperties } from 'react';
 import { ActionSquareData, GameStore } from '../../stores/GameStore';
 import { ActionBoardType } from '../../models/ActionBoardType';
 import { images } from '../../images/_images';
-
+import { Link } from 'react-router-dom';
 
 @inject('gameStore')
 @observer
@@ -12,7 +12,9 @@ export class GameBoard extends React.Component<{gameStore?: GameStore}> {
   public render(): JSX.Element {
     return (
       <div style={styles.container}>
-
+        <Link to="/">
+          Back
+        </Link>
         
         <div style={styles.leftBoardContainer} >
           <ActionBoard type={ActionBoardType.FIRE}/>
