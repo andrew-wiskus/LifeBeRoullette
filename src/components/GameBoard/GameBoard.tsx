@@ -1,6 +1,6 @@
 import { inject, observer } from 'mobx-react';
 import React, { CSSProperties } from 'react';
-import { GameStore } from '../../stores/GameStore';
+import { GameState, GameStore } from '../../stores/GameStore';
 import { ActionBoardType } from '../../models/ActionBoardType';
 import { ActionBoard } from './ActionBoard';
 import { ActionBasic } from './ActionBasic';
@@ -48,7 +48,9 @@ export class GameBoard extends React.Component<{gameStore?: GameStore}> {
             <MainGameWindow />
         </div>
         
-        <div style={styles.right_game_display} />
+        <div style={styles.right_game_display}>
+          <button onClick={() => this.props.gameStore!.initPickCardState()}>PICK CARD</button>
+        </div>
       </div>
     );
   }
@@ -56,9 +58,26 @@ export class GameBoard extends React.Component<{gameStore?: GameStore}> {
 
 @inject('gameStore')
 @observer
-export class MainGameWindow extends React.Component {
+export class MainGameWindow extends React.Component<{gameStore?: GameStore}> {
   public render() {
-    return <div />
+    let store = this.props.gameStore!;
+
+    if(store.gameState != GameState.PICK_CARD) { return null; }
+
+    let cards = store.cardsForStore;
+
+    return <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', paddingLeft: '15%', paddingRight: '15%'}}>
+        {cards.map(card => {
+          let bgColor = card.type == ActionBoardType.FIRE ? 'red' : card.type == ActionBoardType.WATER ? 'blue' : 'green'
+
+          return (
+            <div style={{height: '80%', flex: 1, margin: 10, backgroundColor: bgColor, justifyContent: 'center', alignItems: 'center', display: 'flex'}}>
+              <h1 style={{color: 'white', fontFamily: 'courier'}}>{card.name}</h1>
+            </div>
+          )
+        })}
+        
+      </div>
   }
 }
 
