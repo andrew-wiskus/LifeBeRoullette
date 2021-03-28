@@ -22,7 +22,6 @@ export class GameBoard extends React.Component<{gameStore?: GameStore}> {
         </Link>
 
         <div style={styles.gameBoardBackground} />
-
         
         <div style={styles.left_action_board} >
           <ActionBoard type={ActionBoardType.FIRE}/>
