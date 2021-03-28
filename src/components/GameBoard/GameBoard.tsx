@@ -2,13 +2,10 @@ import { inject, observer } from 'mobx-react';
 import React, { CSSProperties } from 'react';
 import { GameState, GameStore } from '../../stores/GameStore';
 import { ActionBoardType } from '../../models/ActionBoardType';
-<<<<<<< HEAD
 import { Link } from 'react-router-dom';
 import { ActionBoard } from './ActionBoard';
 import { ActionBasic } from './ActionBasic';
-=======
 import { images } from '../../images/_images';
->>>>>>> parent of d35e292... inital game-start-menu
 
 
 @inject('gameStore')
@@ -18,15 +15,12 @@ export class GameBoard extends React.Component<{gameStore?: GameStore}> {
   public render(): JSX.Element {
     return (
       <div style={styles.container}>
-<<<<<<< HEAD
         <Link to="/">
           Back
         </Link>
 
         <div style={styles.gameBoardBackground} />
-=======
 
->>>>>>> parent of d35e292... inital game-start-menu
         
         <div style={styles.left_action_board} >
           <ActionBoard type={ActionBoardType.FIRE}/>
