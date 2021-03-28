@@ -8,6 +8,8 @@ import { ActionBasic } from './ActionBasic';
 import { images } from '../../images/_images';
 
 
+
+
 @inject('gameStore')
 @observer
 export class GameBoard extends React.Component<{gameStore?: GameStore}> {
