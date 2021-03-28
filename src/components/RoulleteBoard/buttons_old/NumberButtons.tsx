@@ -1,7 +1,8 @@
 import { inject } from 'mobx-react';
 import React from 'react';
 import { GameStore } from '../../../stores/GameStore';
-import { RegionProps, styles, BetRegion } from '../../GameBoard/GameBoard';
+import { styles, BetRegion } from '../../GameBoard/GameBoard';
+import { RegionProps } from "../../../models/RegionProps";
 import { tileHeight, tileWidth, getColor } from "../../GameBoard/config";
 import image0 from '../../../images/tiles/board_tiles0.png';
 import image1 from '../../../images/tiles/board_tiles1.png';
