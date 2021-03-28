@@ -8,8 +8,6 @@ import { images } from '../../images/_images';
 import { Link } from 'react-router-dom';
 
 
-
-
 @inject('gameStore')
 @observer
 export class GameBoard extends React.Component<{gameStore?: GameStore}> {
