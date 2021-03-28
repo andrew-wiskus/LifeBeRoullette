@@ -5,9 +5,6 @@ import { UserStore } from './../../stores/UserStore'
 
 
 //Assets
-
-
-
  
 @inject('userStore')
 @observer
@@ -48,5 +45,4 @@ const HandlePage = () => {
 
 export const styles = {
   StartPage_wrapper: { height: '100%',  textAlign: 'center', marginTop: '50px'} as CSSProperties,
-
 }
