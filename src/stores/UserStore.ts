@@ -1,5 +1,4 @@
-import { action, computed, makeObservable, observable } from "mobx";
-
+import { makeObservable, observable } from "mobx";
 
 export class UserStore {
 
@@ -7,5 +6,23 @@ export class UserStore {
         makeObservable(this);
     }
     
-    @observable public winnerID: string = '';
+    @observable public username: string = '';
+    @observable public difficulty: string = '';
+
+
+
+    public loadSaveFile(filename: string) {
+        var json = require( "./../AppData/"+ filename + ".json"); 
+        console.log(json)
+
+    }
+
+    public setstore = ({json}) => {
+        this.username = json.userame;
+    }
+    public clearStore() {
+        this.username = "";
+        this.difficulty = "";
+    }
+
 }

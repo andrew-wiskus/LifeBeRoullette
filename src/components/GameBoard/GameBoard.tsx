@@ -6,11 +6,12 @@ import { ActionBoard } from './ActionBoard';
 import { ActionBasic } from './ActionBasic';
 import { images } from '../../images/_images';
 import { Link } from 'react-router-dom';
+import { UserStore } from './../../stores/UserStore';
 
-
+@inject('userStore')
 @inject('gameStore')
 @observer
-export class GameBoard extends React.Component<{gameStore?: GameStore}> {
+export class GameBoard extends React.Component<{gameStore?: GameStore, userStore?: UserStore}> {
 
   public render(): JSX.Element {
     return (
@@ -18,6 +19,8 @@ export class GameBoard extends React.Component<{gameStore?: GameStore}> {
         <Link to="/">
           Back
         </Link>
+        <h1>{this.props.userStore!.username}</h1>
+        <h1 style={{width:"100%"}}>{this.props.userStore!.difficulty}</h1>
         <div style={styles.gameBoardBackground} />
         
         <div style={styles.left_action_board} >

@@ -26,5 +26,6 @@ export class GameController {
 
     return out;
   }
-
 }
+
+

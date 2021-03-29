@@ -19,9 +19,9 @@ export class ActionSquare extends React.Component<{ gameStore?: GameStore; data:
 
     return (
       <div className={`hover-action ${winnerClass}`} style={{ flex: 1, minWidth: '25%', position: 'relative' }}>
-        {/* <SlotNumberIndicator index={data.valueIndex} isTop={true} />
+        <SlotNumberIndicator index={data.valueIndex} isTop={true} />
         <img src={image} style={{ width: `100%`, height: `100%` }} />
-        <SlotNumberIndicator index={data.valueIndex} isTop={false} /> */}
+        <SlotNumberIndicator index={data.valueIndex} isTop={false} />
 
         { data.assignedCard &&
           <div style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 999}}>
