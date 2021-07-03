@@ -1,17 +1,11 @@
-import { observer, Provider } from 'mobx-react';
 import React from 'react';
+import { observer, Provider } from 'mobx-react';
 import { HashRouter as Router, Switch, Route } from 'react-router-dom';
-import { GameBoard } from './components/GameBoard/GameBoard';
+import { GameBoard } from './pages/GameBoard/GameBoard';
+import { MainMenu } from './pages/MainMenu/MainMenu';
 import { GameStore } from './stores/GameStore';
 import { UserStore } from './stores/UserStore';
-
-//Pages
-import { Launch } from './pages/Launch/Launch';
-import { Load } from './pages/Load/Load';
-import { Settings } from './pages/Settings/Settings';
-import { Start } from './pages/Start/Start';
-
-
+import { LevelSelect } from './pages/LevelSelect/LevelSelect';
 
 const gameStore = new GameStore();
 const userStore = new UserStore();
@@ -24,11 +18,8 @@ export default class App extends React.Component {
         <Router>
           <Switch>
           <Route path="/gameboard" component={GameBoard} />
-          <Route path="/load" component={Load}/>
-          <Route path="/start" component={Start} />
-          <Route path="/settings" component={Settings} />
-          <Route path="/" component={Launch} />
-            
+          <Route path="/levelselect" component={LevelSelect} />
+          <Route path="/" component={MainMenu} />
           </Switch>
         </Router>
       </Provider>
