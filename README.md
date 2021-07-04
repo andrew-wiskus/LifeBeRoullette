@@ -1,6 +1,7 @@
-Roullette Rouge Lite
+#PATH 
 
-May 23rd, eskgetit.
+-May 23rd, eskgetit.-
+Ok didnt meet that deadline... August 1st?!
 
 npm install -> npm start 
 
@@ -22,7 +23,3 @@ game window on start is controlled here, set your config and don't push it up ;)
     y: 0,
   });
 ```
-
-
-if this interests you and you want to dive deep.. this will be something that could really get things lit (get it, like lighting effects)
-https://www.madebymike.com.au/writing/canvas-image-manipulation/
