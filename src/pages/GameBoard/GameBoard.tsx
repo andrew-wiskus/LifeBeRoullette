@@ -2,7 +2,7 @@ import { inject } from 'mobx-react';
 import React, { CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import { Tile } from '../../components/Tile';
-import { Timer } from '../../components/Timer';
+import { getTimeObj, Timer } from '../../components/Timer';
 import { Level } from '../../data/Levels';
 import { images } from '../../images/_images';
 import { GameStore } from '../../stores/GameStore';
@@ -12,6 +12,7 @@ interface State {
   boardTiles: TileWithData[];
   currentPosition: {x: number, y: number} | undefined;
   runTimer: boolean;
+  gameWasWon: boolean;
 }
 
 interface TileWithData {
@@ -24,9 +25,10 @@ interface TileWithData {
 @inject('gameStore')
 export class GameBoard extends React.Component<{ gameStore?: GameStore },State> {
 
-  private timestamp: number = 0;
+  private timestamp: any;
 
   private onTimerRun = (timestamp: number) => {
+    console.log("ts?", timestamp)
     this.timestamp = timestamp;
   }
 
@@ -34,6 +36,7 @@ export class GameBoard extends React.Component<{ gameStore?: GameStore },State> 
     boardTiles: [] as TileWithData[],
     currentPosition: undefined,
     runTimer: true,
+    gameWasWon: false,
   };
 
   public componentDidMount() {
@@ -98,7 +101,7 @@ export class GameBoard extends React.Component<{ gameStore?: GameStore },State> 
 
   private onWinGame = () => {
     this.setState({runTimer: false}, () => {
-      console.log("time: ", this.timestamp);
+      this.setState({gameWasWon: true})
     })
   }
 
@@ -116,6 +119,13 @@ export class GameBoard extends React.Component<{ gameStore?: GameStore },State> 
     let pos = this.state.currentPosition;
     let currentLevel = this.props.gameStore!.currentLevel;
 
+    if(this.state.gameWasWon) {
+      return <div style={{width: `100vw`, height: `100vh`, justifyContent: 'center', alignItems: 'center', display: 'flex', flexDirection: 'column'}}>
+          <h1 style={{fontSize: 22, fontWeight: 'bold', marginBottom: 20}}>You're amazing!!</h1>
+          <h1 style={{marginBottom: 20}}>Time: {this.timestamp.string}</h1>
+          <Link to='/levelselect'>Level select</Link>
+      </div>
+    }
     return (
       <div style={styles.container}>
 
@@ -162,6 +172,7 @@ export class GameBoard extends React.Component<{ gameStore?: GameStore },State> 
     );
   }
 }
+
 
 const getPotentialMove = (pos: { x: number, y: number } | undefined, board: TileWithData[], level: Level) => {
 
