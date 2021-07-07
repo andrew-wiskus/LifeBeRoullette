@@ -19,7 +19,8 @@ interface TileWithData {
     x: number;
     y: number;
     value: number;
-    id: { x: number, y: number }
+    id: { x: number, y: number };
+    type: string;
 }
 
 @inject('gameStore')
@@ -28,7 +29,6 @@ export class GameBoard extends React.Component<{ gameStore?: GameStore },State> 
   private timestamp: any;
 
   private onTimerRun = (timestamp: number) => {
-    console.log("ts?", timestamp)
     this.timestamp = timestamp;
   }
 
@@ -46,28 +46,13 @@ export class GameBoard extends React.Component<{ gameStore?: GameStore },State> 
 
   private onClickTile = (x: number, y: number) => {
     let moveIsValid = true;
-    let possibleMoves = [];
     let level = this.props.gameStore!.currentLevel
     let requestedTile = this.state.boardTiles[this.state.boardTiles.findIndex(p => p.id.x == x && p.id.y == y)];
 
     if(this.state.currentPosition != undefined) {
       let cpos = this.state.currentPosition;
 
-      possibleMoves.push({x: cpos.x - 1, y: cpos.y})
-      possibleMoves.push({x: cpos.x + 1, y: cpos.y})
-
-
-      possibleMoves.push({x: cpos.x, y: cpos.y + 1})
-      possibleMoves.push({x: cpos.x, y: cpos.y - 1})
-
-      let cPosIsOnFullRow = cpos.y % 2 == (level.firstRowFull ? 0 : 1)
-      if(cPosIsOnFullRow) {
-        possibleMoves.push({x: cpos.x - 1, y: cpos.y + 1})
-        possibleMoves.push({x: cpos.x - 1, y: cpos.y - 1})
-      } else {
-        possibleMoves.push({x: cpos.x + 1, y: cpos.y + 1})
-        possibleMoves.push({x: cpos.x + 1, y: cpos.y - 1})
-      }
+      let possibleMoves = getSurroundingTiles(cpos, level);
       
       if(possibleMoves.findIndex(pos => x == pos.x && y == pos.y) == -1) {
         moveIsValid = false;
@@ -81,10 +66,9 @@ export class GameBoard extends React.Component<{ gameStore?: GameStore },State> 
     
 
     if(moveIsValid) {
-      let index = this.state.boardTiles.findIndex(element => element.id.x == x && element.id.y == y);
-      let stateCopy = this.state.boardTiles;
-      stateCopy[index].value -= 1;
-      this.setState({boardTiles: stateCopy});
+      let newBoardState = getNewBoardStateFromAction({x, y}, level, this.state.boardTiles)
+
+      this.setState({boardTiles: newBoardState});
       this.setState({currentPosition: {x: x, y: y}})
 
       this.checkForWin();
@@ -146,7 +130,7 @@ export class GameBoard extends React.Component<{ gameStore?: GameStore },State> 
 
             return (
               <div style={{ position: 'absolute', left: tile.x, top: tile.y }} onClick={() => this.onClickTile(tile.id.x, tile.id.y)}>
-                <Tile value={tile.value} isSelected={isSelected} />
+                <Tile value={tile.value} isSelected={isSelected} type={tile.type}/>
                 {isSelected &&
                   <>
                     {moves.upLeft == true && <img src={images.arrow_TL} style={{  ...styles.moveIndicator}} /> }
@@ -173,6 +157,111 @@ export class GameBoard extends React.Component<{ gameStore?: GameStore },State> 
   }
 }
 
+const getNewBoardStateFromAction = (pos1: {x: number, y: number}, level1: Level, boardTiles1: TileWithData[]) => {
+
+      let finalState = boardTiles1;
+      // CHAIN RECATIONS BABY 
+      // Bomb -> Bomb -> Row -> etc;
+
+      let recursiveMove = (pos: {x: number, y: number}, level: Level, boardTiles: TileWithData[]) => {
+        let index = boardTiles.findIndex(element => element.id.x == pos1.x && element.id.y == pos1.y);
+
+        if(index == -1) {
+          return finalState;
+        }
+
+        let stateCopy = boardTiles;
+
+        let tile = stateCopy[index];
+        if(stateCopy[index].value <= 0) {
+          return finalState;
+        }
+
+        if(tile.type == '' || tile.type == 'normal' ) {
+            stateCopy[index].value -= 1;
+            finalState = stateCopy;
+        }
+
+        if(tile.type == 'bomb') {
+
+
+          stateCopy[index].value -= 1;
+          stateCopy[index].type = 'normal'
+          finalState = stateCopy;
+
+          let surroundingTiles = getSurroundingTiles({x: pos.x, y: pos.y}, level);
+          surroundingTiles.forEach(tile => {
+            finalState = getNewBoardStateFromAction({x: tile.x, y: tile.y}, level, finalState);
+          })
+        }
+
+        if(tile.type == 'row') {
+          stateCopy[index].value -= 1;
+          stateCopy[index].type = 'normal'
+          finalState = stateCopy;
+
+          let rowTiles = getRowTiles({x: pos.x, y: pos.y}, finalState);
+          console.log("ROW!", rowTiles);
+          rowTiles.forEach(tile => {
+            finalState = getNewBoardStateFromAction({x: tile.id.x, y: tile.id.y}, level, finalState);
+          })
+        }
+
+        if(tile.type == 'col') {
+          stateCopy[index].value -= 1;
+          stateCopy[index].type = 'normal'
+          finalState = stateCopy;
+
+          let colTiles = getColTiles({x: pos.x, y: pos.y}, finalState);
+          colTiles.forEach(tile => {
+            finalState = getNewBoardStateFromAction({x: tile.id.x, y: tile.id.y}, level, finalState);
+          })
+        }
+
+        return finalState;
+      }
+
+      finalState = recursiveMove({x: pos1.x, y: pos1.y}, level1, boardTiles1);
+      return finalState;
+
+}
+
+const getColTiles = (pos: {x: number, y: number}, tiles: TileWithData[]) => {
+
+  let possibles = tiles.filter(t => t.id.x == pos.x && t.id.y != pos.y);
+
+  return possibles;
+}
+
+const getRowTiles = (pos: {x: number, y: number}, tiles: TileWithData[]) => {
+
+  let possibles = tiles.filter(t => t.id.y == pos.y && t.id.x != pos.x);
+
+  return possibles;
+}
+
+const getSurroundingTiles = (pos: {x: number, y: number }, level: Level) => {
+
+      let surroundingTiles = [];
+
+        surroundingTiles.push({x: pos.x - 1, y: pos.y})
+      surroundingTiles.push({x: pos.x + 1, y: pos.y})
+
+
+      surroundingTiles.push({x: pos.x, y: pos.y + 1})
+      surroundingTiles.push({x: pos.x, y: pos.y - 1})
+
+      let posIsOnFullRow = pos.y % 2 == (level.firstRowFull ? 0 : 1)
+      if(posIsOnFullRow) {
+        surroundingTiles.push({x: pos.x - 1, y: pos.y + 1})
+        surroundingTiles.push({x: pos.x - 1, y: pos.y - 1})
+      } else {
+        surroundingTiles.push({x: pos.x + 1, y: pos.y + 1})
+        surroundingTiles.push({x: pos.x + 1, y: pos.y - 1})
+      }
+
+      return surroundingTiles;
+}
 
 const getPotentialMove = (pos: { x: number, y: number } | undefined, board: TileWithData[], level: Level) => {
 
@@ -228,7 +317,7 @@ const getTilePositionData = (level: Level): TileWithData[] => {
 
   let flip = firstRowFull;
   
-  // [5, 4, 5, 4, 5];
+  // [5, 4, 5, 4, 5]; // describes count of hex's in each row
   let distribution = new Array(rows).fill(cols).map(val => {
       flip = !flip;
       return val + (flip ? -1 : 0);
@@ -240,11 +329,13 @@ const getTilePositionData = (level: Level): TileWithData[] => {
   
   let tiles = level.boardTiles.map(tile => {
 
+    let tileTypeAndValue = getTileValue(tile);
     let tileData = {
         x: currentCol * 100 + (distribution[currentRow] == cols ? 0 : 50),
         y: currentRow * 85,
-        value: tile,
-        id: { x: currentCol, y: currentRow }
+        value: tileTypeAndValue.value,
+        id: { x: currentCol, y: currentRow },
+        type: tileTypeAndValue.type
     }
 
     currentCol += 1;
@@ -258,6 +349,25 @@ const getTilePositionData = (level: Level): TileWithData[] => {
 
   return tiles;
 };
+
+const getTileValue = (tile: string | number): { value: number, type: string } => {
+  if(typeof tile == 'string') {
+    let type = tile[0];
+    let value = parseInt(tile.substr(1));
+
+    let typecast = '';
+    if(type == 'B') { typecast = 'bomb' }
+    if(type == 'R') { typecast = 'row' }
+    if(type == 'C') { typecast = 'col' }
+    return { value: value, type: typecast }
+  }
+
+  if(typeof tile == 'number') {
+    return { value: tile, type: 'normal' }
+  }
+
+  return {value: -47, type: 'normal' }
+}
 
 const styles: StyleObject = {
   container: {

@@ -4,13 +4,33 @@ import { StyleObject } from '../pages/MainMenu/MainMenu';
 
 interface Props {
 	value: number;
+	type: string;
 	isSelected: boolean;
 }
 export class Tile extends React.Component<Props> {
 	public render() {
+
+		let valueString = ''
+		switch(this.props.type) {
+			case 'bomb':
+				valueString = 'B' + this.props.value;
+				break;
+
+			case 'row':
+				valueString = 'R' + this.props.value;
+				break;
+			case 'col':
+				valueString = 'C' + this.props.value;
+				break;
+				
+			default:
+				valueString = this.props.value + '';
+		}
+
+
 		return (
 			<div style={{ ...styles.container, ...{ opacity: this.props.value == 0 ? 0.2 : 1 } }}>
-				<h1 style={styles.valueText}>{this.props.value}</h1>
+				<h1 style={styles.valueText}>{valueString}</h1>
 				<img src={this.props.isSelected ? images.hex_select : images.hex} style={styles.bgImage} />
 			</div>
 		);
