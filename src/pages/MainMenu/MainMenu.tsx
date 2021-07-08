@@ -19,6 +19,9 @@ export class MainMenu extends React.Component<{userStore?: UserStore }> {
         <Link to="/levelselect">
           <h1 style={styles.buttonText}>play</h1>
         </Link>
+        <Link to="/levelcreator">
+          <h1 style={styles.buttonText}>level creator</h1>
+        </Link>
         </div>
 
       </div>
@@ -41,7 +44,8 @@ const styles: StyleObject = {
   },
   buttonContainer: {
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'column',
+    textAlign: 'center'
   },
   buttonText: {
     fontSize: 18,

@@ -6,6 +6,7 @@ import { MainMenu } from './pages/MainMenu/MainMenu';
 import { GameStore } from './stores/GameStore';
 import { UserStore } from './stores/UserStore';
 import { LevelSelect } from './pages/LevelSelect/LevelSelect';
+import { LevelCreator } from './pages/LevelCreator/LevelCreator';
 
 const gameStore = new GameStore();
 const userStore = new UserStore();
@@ -19,6 +20,7 @@ export default class App extends React.Component {
           <Switch>
           <Route path="/gameboard" component={GameBoard} />
           <Route path="/levelselect" component={LevelSelect} />
+          <Route path="/levelcreator" component={LevelCreator} />
           <Route path="/" component={MainMenu} />
           </Switch>
         </Router>
