@@ -1,27 +1,24 @@
 import React from 'react';
 import { observer, Provider } from 'mobx-react';
 import { HashRouter as Router, Switch, Route } from 'react-router-dom';
-import { GameBoard } from './pages/GameBoard/GameBoard';
-import { MainMenu } from './pages/MainMenu/MainMenu';
 import { GameStore } from './stores/GameStore';
 import { UserStore } from './stores/UserStore';
-import { LevelSelect } from './pages/LevelSelect/LevelSelect';
-import { LevelCreator } from './pages/LevelCreator/LevelCreator';
+import { Home } from './pages/Home/Home';
+import { TimeStore } from './stores/TimeStore';
+
 
 const gameStore = new GameStore();
 const userStore = new UserStore();
+const timeStore = new TimeStore();
 
 @observer
 export default class App extends React.Component {
   render() {
     return (
-      <Provider userStore={userStore} gameStore={gameStore}>
+      <Provider userStore={userStore} gameStore={gameStore} timeStore={timeStore}>
         <Router>
           <Switch>
-          <Route path="/gameboard" component={GameBoard} />
-          <Route path="/levelselect" component={LevelSelect} />
-          <Route path="/levelcreator" component={LevelCreator} />
-          <Route path="/" component={MainMenu} />
+          <Route path="/" component={Home} />
           </Switch>
         </Router>
       </Provider>

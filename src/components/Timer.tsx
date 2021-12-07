@@ -13,6 +13,14 @@ interface State {
 	startTime: number;
 }
 
+export interface TimeObj {
+	mm: string, 
+	ss: string, 
+	ms: string, 
+	string: string, 
+	fullMS: number
+}
+
 export class Timer extends React.Component<Props, State> {
 	public state: State = {
 		mm: `00`,
@@ -23,33 +31,7 @@ export class Timer extends React.Component<Props, State> {
 	};
 
 	public componentDidMount() {
-		const step = (ms: number) => {
-			var timestamp = Math.floor(ms);
 
-			if (this.props.timerIsRunning == false) {
-				if (this.state.startTime != 0) {
-					this.setState({ startTime: 0 });
-				}
-				window.requestAnimationFrame(step);
-				return;
-			}
-
-			if (this.state.startTime == 0) {
-				this.setState({ startTime: timestamp }, () => {
-					window.requestAnimationFrame(step);
-				});
-				return;
-			}
-
-			let elapsed = timestamp - this.state.startTime;
-
-			let time = getTimeObj(elapsed);
-			this.props.onAnimationFrame(time);
-			this.setState({ mm: time.mm, ss: time.ss, ms: time.ms });
-			window.requestAnimationFrame(step);
-		};
-
-		window.requestAnimationFrame(step);
 	}
 
 	public render() {
@@ -61,7 +43,7 @@ export class Timer extends React.Component<Props, State> {
 	}
 }
 
-export const getTimeObj = (elapsed: number) => {
+export const getTimeObj = (elapsed: number): TimeObj => {
 	let mm: any = Math.floor(elapsed / 1000 / 60);
 	let ss: any = Math.floor((elapsed / 1000) % 60);
 	let ms: any = Math.floor((elapsed % 1000) / 10);

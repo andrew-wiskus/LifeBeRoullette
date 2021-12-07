@@ -1,6 +1,5 @@
 import { makeObservable, observable } from "mobx";
 
-
 export class UserStore {
 
     constructor() {
