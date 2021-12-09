@@ -16,10 +16,11 @@ export class TimeStore {
          @observable time_ms = 0;
          @observable time_sec = 0;
          @observable time_min = 0;
+         @observable elapsed = 0;
 
          private tick_functions: any = {};
          private last_tick_ms = 0;
-         private tick_length = 600;
+         private tick_length = 1000 / 30;
          private last_latency = 0;
 
          constructor() {
@@ -29,15 +30,16 @@ export class TimeStore {
          }
 
          public on_tick(time: TimeObj) {
-            this.LATENCY_DEBUG(true, time);
+            this.LATENCY_DEBUG(false, time);
+            this.elapsed = time.elapsed;
 
            Object.keys(this.tick_functions).forEach(key => {
-             this.tick_functions[key]();
+             this.tick_functions[key](time);
            })
          }
 
-         public addTickFunction = (id: string, func: () => void) => {
-           this.tick_functions[id] = func;
+         public addTickFunction = (id: string, func: (time: TimeObj) => void) => {
+           this.tick_functions[id] = (time: TimeObj) => func(time);
          };
 
          public removeTickFunction = (id: string) => {
@@ -45,6 +47,10 @@ export class TimeStore {
              console.log('WARNING -- WARNING -- TRYING TO DELETE KEY THAT DOESNT EXIST')
            }
            delete this.tick_functions[id] 
+         }
+
+         public isFunctionRunning = (id: string): boolean => {
+           return !(this.tick_functions[id] == undefined)
          }
 
          private LATENCY_DEBUG = (print: boolean, time: TimeObj) => {
