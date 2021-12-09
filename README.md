@@ -1,12 +1,10 @@
-#PATH 
 
--May 23rd, eskgetit.-
-Ok didnt meet that deadline... August 1st?!
+
 
 npm install -> npm start 
 
 
-game window on start is controlled here, set your config and don't push it up ;)
+game window on start is controlled here
 
 `src/main.dev.ts`
 
